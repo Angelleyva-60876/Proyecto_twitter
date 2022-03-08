@@ -11,8 +11,6 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from PyQt5 import QtCore
 
-from controller import NeuralNetwork
-
 scriptDir = dirname(realpath(__file__))
 From_Main,_ = loadUiType(join(dirname(__file__), "../view/view_winmain.ui"))
 
