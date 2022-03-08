@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 
 scriptDir = dirname(realpath(__file__))
-From_Main, _ = loadUiType(join(dirname(__file__), "Main.ui"))
+From_Main, _ = loadUiType(join(dirname(__file__), "../view/view_win.ui"))
 
 
 class MainWindow(QWidget, From_Main):

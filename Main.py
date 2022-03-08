@@ -1,6 +1,6 @@
 import sys
 
-from view.view_winmain import Ui_Form
+from view.view_win import Ui_Form
 from controller.Controller import MainWindow
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore,QtGui,QtWidgets
