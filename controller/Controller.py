@@ -9,11 +9,12 @@ from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 
+
 scriptDir = dirname(realpath(__file__))
-From_Main, _ = loadUiType(join(dirname(__file__), "../view/view_win.ui"))
+From_Main,  = loadUiType(join(dirname(__file__), "../view/Main.ui"))
 
 
-class MainWindow(QWidget, From_Main):
+class Controller(QWidget):
     df = []
     path = ""
     palabras = []
@@ -21,15 +22,17 @@ class MainWindow(QWidget, From_Main):
     info = ""
 
     def __init__(self):
-        super(MainWindow, self).__init__()
+        super(Controller, self).__init__()
         QWidget.__init__(self)
         self.setupUi(self)
 
-        '''self.ButtonAbrir.clicked.connect(self.AbrirArchivo)
+        self.question = [0 for i in range(0, 8)]
+
+        self.ButtonAbrir.clicked.connect(self.AbrirArchivo)
         self.BtnGenerar.clicked.connect(self.DatosColumnas)
         self.BtnPClave.clicked.connect(self.filtroPalabras)
         self.BtnGuardar.clicked.connect(self.guardarArchivoFiltrado)
-        self.BtnWordCloud.clicked.connect(self.WordCloud)'''
+        self.BtnWordCloud.clicked.connect(self.WordCloud)
 
     def AbrirArchivo(self):
         global path
@@ -128,7 +131,11 @@ class MainWindow(QWidget, From_Main):
         plt.tight_layout(pad=0)
         plt.show()
 
+#neuronal network
+
+    
 app = QApplication(sys.argv)
-sheet = MainWindow()
+sheet = Controller(QWidget)
 sheet.show()
 sys.exit(app.exec_())
+ 
