@@ -7,9 +7,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.view = Ui_Form()
-        self.view.setupUi(self)
-        
-        
+        self.view.setupUi(self)   
     
 
 if __name__ == "__main__":
