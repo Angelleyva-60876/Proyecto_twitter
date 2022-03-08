@@ -3,7 +3,7 @@ import sys
 from view.view_winmain import Ui_Form
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore,QtGui,QtWidgets
-class MainWindow(QMainWindow):
+class MainWindow(QWidget,Ui_Form):
     def __init__(self):
         super().__init__()
         self.view = Ui_Form()
