@@ -2,19 +2,22 @@ from glob import glob
 import os
 import sys
 from os.path import dirname, realpath, join
-from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog, QMessageBox, QTableWidgetItem
 from PyQt5.uic import loadUiType
 import pandas as pd
+import numpy as np
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
+from PyQt5 import QtCore
 
+from controller import NeuralNetwork
 
 scriptDir = dirname(realpath(__file__))
-From_Main,  = loadUiType(join(dirname(__file__), "../view/Main.ui"))
+From_Main,_ = loadUiType(join(dirname(__file__), "../view/view_winmain.ui"))
 
 
-class Controller(QWidget):
+class Controller(QWidget,From_Main):
     df = []
     path = ""
     palabras = []
@@ -33,6 +36,19 @@ class Controller(QWidget):
         self.BtnPClave.clicked.connect(self.filtroPalabras)
         self.BtnGuardar.clicked.connect(self.guardarArchivoFiltrado)
         self.BtnWordCloud.clicked.connect(self.WordCloud)
+
+        self.BtnEntrenar.clicked.connect(self.train)
+        self.BtnEnviar.clicked.connect(self.send) 
+        #           
+        # llamado de los Checked al metodo OnStateChanged 
+        self.checkBoxAmigos.stateChanged.connect(self.onStateChanged)
+        self.checkBoxFamilia.stateChanged.connect(self.onStateChanged)
+        self.checkBoxFiesta.stateChanged.connect(self.onStateChanged)
+        self.checkBoxGames.stateChanged.connect(self.onStateChanged)
+        self.checkBoxHogar.stateChanged.connect(self.onStateChanged)
+        self.checkBoxPlaya.stateChanged.connect(self.onStateChanged)
+        self.checkBoxVacaciones.stateChanged.connect(self.onStateChanged)
+        self.checkBoxVerano.stateChanged.connect(self.onStateChanged)
 
     def AbrirArchivo(self):
         global path
@@ -132,10 +148,75 @@ class Controller(QWidget):
         plt.show()
 
 #neuronal network
+    def load_data(self):
+        global df
+        df = self.all_data = pd.read_csv(path)
+        
+        input_columns =  self.all_data[['Amigos','Familia','Fiesta','Games','Hogar','Playa','Vacaciones','Verano']]
+        output_column = self.all_data[['Salida']]
+        
+        self.training_set_inputs = input_columns[:].values
+        self.training_set_outputs = output_column.values
+        print(self.training_set_inputs)
+        print(self.training_set_outputs)
 
+    def train(self):
+        self.load_data()
+        self.neural_network = NeuralNetwork()
+        self.neural_network.train(self.training_set_inputs, self.training_set_outputs)
+        self.show_dialog()
+
+    def show_dialog(self):
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("")
+        dlg.setText("¡El entrenamiento ha finalizado!")
+        button = dlg.exec()
+    
+    def onStateChanged(self, state):
+        
+        if state == QtCore.Qt.Checked:
+            if self.sender() == self.checkBoxAmigos:
+                self.question[0] = 1
+            elif self.sender() == self.checkBoxFamilia:
+                self.question[1] = 1
+            elif self.sender() == self.checkBoxFiesta:
+                self.question[2] = 1
+            elif self.sender() == self.checkBoxGames:
+                self.question[3] = 1
+            elif self.sender() == self.checkBoxHogar:
+                self.question[4] = 1
+            elif self.sender() == self.checkBoxPlaya:
+                self.question[5] = 1
+            elif self.sender() == self.checkBoxVacaciones:
+                self.question[6] = 1
+            elif self.sender() == self.checkBoxVerano:
+                self.question[7] = 1
+        else:
+            if self.sender() == self.checkBoxAmigos:
+                self.question[0] = 0
+            elif self.sender() == self.checkBoxFamilia:
+                self.question[1] = 0
+            elif self.sender() == self.checkBoxFiesta:
+                self.question[2] = 0
+            elif self.sender() == self.checkBoxGames:
+                self.question[3] = 0
+            elif self.sender() == self.checkBoxHogar:
+                self.question[4] = 0
+            elif self.sender() == self.checkBoxPlaya:
+                self.question[5] = 0
+            elif self.sender() == self.checkBoxVacaciones:
+                self.question[6] = 0
+            elif self.sender() == self.checkBoxVerano:
+                self.question[7] = 0
+        print(self.question)
+    
+    def send(self):
+        print (self.neural_network.think(np.array(self.question)))
+        ans = np.array2string(self.neural_network.think(np.array(self.question)))
+        self.lineEditAns.setText(ans)
     
 app = QApplication(sys.argv)
-sheet = Controller(QWidget)
+sheet = Controller()
 sheet.show()
 sys.exit(app.exec_())
  
