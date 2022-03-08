@@ -25,11 +25,11 @@ class MainWindow(QWidget, From_Main):
         QWidget.__init__(self)
         self.setupUi(self)
 
-        self.ButtonAbrir.clicked.connect(self.AbrirArchivo)
+        '''self.ButtonAbrir.clicked.connect(self.AbrirArchivo)
         self.BtnGenerar.clicked.connect(self.DatosColumnas)
         self.BtnPClave.clicked.connect(self.filtroPalabras)
         self.BtnGuardar.clicked.connect(self.guardarArchivoFiltrado)
-        self.BtnWordCloud.clicked.connect(self.WordCloud)
+        self.BtnWordCloud.clicked.connect(self.WordCloud)'''
 
     def AbrirArchivo(self):
         global path
