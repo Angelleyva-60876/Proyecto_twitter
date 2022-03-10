@@ -8,21 +8,9 @@ class word:
     df = []
     archivo = ""
     
-    def abrir_archivo(self):
-        global archivo
-        archivo = QFileDialog.getOpenFileName(
-            parent=self,
-            caption="Seleccione su archivo para filtrar",
-            directory = os.getcwd(),
-            filter='csv files (*csv*);; All files *.*')
-        global df
-        
-        df= pd.read_csv(archivo[0], index_col=0,encoding='latin-1')
-
-        return archivo
-    
     def WordCloud(self):
-        global info 
+        global info
+        df = self.all_data = pd.read_csv("PalabraClave.csv")
         frases = df["Texto"]
         frasesArreglo = []
 
