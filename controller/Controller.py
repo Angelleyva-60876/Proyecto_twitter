@@ -125,7 +125,6 @@ class Controlador(QWidget,From_Main):
         except:
             QMessageBox.about(self, "Error", "No se selecciono un archivo")
 
-#neuronal network
     def load_data(self):
         global df
         df = self.all_data = pd.read_csv(path)
