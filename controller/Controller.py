@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from PyQt5 import QtCore
 from stop_words import get_stop_words
-from model.NeuronalNewtork import neuralNetwork
+from model.NeuronalNetwork import neuralNetwork
 from model.WorldCloud import word
 from model.Histograma import Histogram
 
@@ -150,7 +150,6 @@ class Controlador(QWidget,From_Main):
         button = dlg.exec()
     
     def onStateChanged(self, state):
-        
         if state == QtCore.Qt.Checked:
             if self.sender() == self.checkBoxAmigos:
                 self.question[0] = 1

@@ -18,7 +18,6 @@ class word:
             frasesArreglo.append(i)
         info = "".join(frasesArreglo)
 
-        # generar stopwords
         stop_wordsunicos = ['Ã', 'Â', 'ð', 'ðŸ', 'Ÿ', '€', '@', '¢', 'https', 'âœ' 'âœˆï', 'ˆ',
                             'Ÿ', 'â', 'œ', 'ï', 'estÃ', 'dÃ', 'mÃ', 'ä', 'https://t.co/', 't', 'co', 'í', 'n']
         stop_words = stopwords.words('spanish')
@@ -26,13 +25,9 @@ class word:
 
         for val in df.Texto:
 
-            # typecaste each val to string
             val = str(val)
-
-            # split the value
         tokens = val.split()
 
-        # Converts each token into lowercase
         for i in range(len(tokens)):
             tokens[i] = tokens[i].lower()
 
@@ -43,7 +38,6 @@ class word:
                               stopwords=stop_words,
                               min_font_size=10).generate(info)
 
-        # plot the WordCloud image
         plt.figure(figsize=(8, 8), facecolor=None)
         plt.imshow(wordcloud)
         plt.axis("off")
