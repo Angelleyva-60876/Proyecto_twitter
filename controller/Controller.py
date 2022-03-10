@@ -10,6 +10,7 @@ from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from PyQt5 import QtCore
+from stop_words import get_stop_words
 
 scriptDir = dirname(realpath(__file__))
 From_Main,_ = loadUiType(join(dirname(__file__), "../view/view_winmain.ui"))
@@ -21,6 +22,8 @@ class Controller(QWidget,From_Main):
     palabras = []
     listaPalabras = ""
     info = ""
+    texto = ''
+    data = ''
 
     def __init__(self):
         super(Controller, self).__init__()
@@ -34,6 +37,7 @@ class Controller(QWidget,From_Main):
         self.BtnPClave.clicked.connect(self.filtroPalabras)
         self.BtnGuardar.clicked.connect(self.guardarArchivoFiltrado)
         self.BtnWordCloud.clicked.connect(self.WordCloud)
+        self.BtnHistograma.clicked.connect(self.Histograma)
 
         self.BtnEntrenar.clicked.connect(self.train)
         self.BtnEnviar.clicked.connect(self.send) 
@@ -75,15 +79,14 @@ class Controller(QWidget,From_Main):
                 palabrasString.append(i)
 
         print(palabrasString)
-        global listaPalabras
-        listaPalabras = "".join(palabrasString)
-        print(listaPalabras)
+        palabras = "".join(palabrasString)
+        print(palabras)
         self.FiltrarPalabra.setText("")
-        return listaPalabras
+        return palabras
 
     def guardarArchivoFiltrado(self):
         palabrasfiltradas = df[df['Texto'].str.contains(
-            listaPalabras, case=False, na=False, regex=True)]
+            palabras, case=False, na=False, regex=True)]
         palabrasfiltradas.to_csv(os.path.abspath("PalabraClave.csv"))
 
     def DatosColumnas(self):
@@ -213,6 +216,51 @@ class Controller(QWidget,From_Main):
         ans = np.array2string(self.neural_network.think(np.array(self.question)))
         self.lineEditAns.setText(ans)
     
+    def Histograma(self):
+        global df
+        
+        df= pd.read_csv(os.path.abspath("PalabraClave.csv"))
+        a = list(df['Texto'])
+        global texto
+        texto = ' '.join(str(e) for e in a)
+        caracteres = ",;:.\n!\"'ÃÂðŸ€@¢âœïˆâïÃäº¾©*¡#£»´²³±¦"
+        for caracter in caracteres:
+            texto = texto.replace(caracter,"")  # Remplazarlo por "nada"; es decir, removerlo
+        texto= texto.lower()
+        palabras = texto.split(" ")
+        
+        global palabras_irrelevantes
+        palabras_irrelevantes = get_stop_words('spanish')
+        stop_wordsunicos = ['Ã', 'Â', 'ð','ðŸ', 'Ÿ', '€','@', '¢' ,'https', 'âœ' 'âœˆï','ˆ','Ÿ','â','œ','ï', 'estÃ','dÃ','mÃ', 'ä', 'https://t.co/', 't', 'co', 'í', 'n']
+        palabras_irrelevantes.extend(stop_wordsunicos)
+
+        for i in range (len(palabras_irrelevantes)):
+            try:
+                while True:
+                    palabras.remove(palabras_irrelevantes[i-1])
+            except ValueError:
+                pass
+        diccionario_frecuencias = {}
+        
+        print(palabras)
+
+        for palabra in palabras:
+            if palabra in diccionario_frecuencias:
+                diccionario_frecuencias[palabra] += 1
+            else:
+                diccionario_frecuencias[palabra] = 1
+
+        for palabra in diccionario_frecuencias:
+            frecuencia = diccionario_frecuencias[palabra]
+        data = palabras
+        
+        n, bins, patches = plt.hist(data)
+        plt.xlabel("Palabras")
+        plt.ylabel("Frecuencia")
+        plt.title("Histograma")
+        plt.show()
+        
+        
 app = QApplication(sys.argv)
 sheet = Controller()
 sheet.show()
