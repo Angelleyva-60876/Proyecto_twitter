@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from PyQt5 import QtCore
 from stop_words import get_stop_words
-from model.neuronalNewtork import NeuralNetwork
+from model.NeuronalNewtork import neuralNetwork
 from model.WorldCloud import word
 from model.Histograma import Histogram
 
@@ -139,7 +139,7 @@ class Controlador(QWidget,From_Main):
 
     def train(self):
         self.load_data()
-        self.neural_network = NeuralNetwork()
+        self.neural_network = neuralNetwork()
         self.neural_network.train(self.training_set_inputs, self.training_set_outputs)
         self.show_dialog()
 
