@@ -35,8 +35,6 @@ class Histogram:
             except ValueError:
                 pass
         diccionario_frecuencias = {}
-        
-        print(palabras)
 
         for palabra in palabras:
             if palabra in diccionario_frecuencias:
